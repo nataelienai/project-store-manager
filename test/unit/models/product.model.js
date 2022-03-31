@@ -53,4 +53,38 @@ describe('ProductModel', () => {
       });
     });
   });
+
+  describe('#getById()', () => {
+    context('when the database is empty', () => {
+      before(() => {
+        sinon.stub(connection, 'execute').resolves([[]])
+      });
+
+      after(() => {
+        connection.execute.restore();
+      });
+
+      it('returns null', async () => {
+        const product = await ProductModel.getById(1);
+        expect(product).to.be.null;
+      });
+    });
+
+    context('when the database is populated', () => {
+      const expectedProduct = multipleProducts.find(({ id }) => id === 2);
+
+      before(() => {
+        sinon.stub(connection, 'execute').resolves([[expectedProduct]]);
+      });
+
+      after(() => {
+        connection.execute.restore();
+      });
+
+      it('returns the product', async () => {
+        const actualProduct = await ProductModel.getById(2);
+        expect(actualProduct).to.deep.equal(expectedProduct);
+      });
+    });
+  });
 });
