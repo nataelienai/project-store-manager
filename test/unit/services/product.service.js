@@ -3,6 +3,8 @@ const { expect } = require('chai');
 const sinon = require('sinon');
 const ProductModel = require('../../../models/product.model');
 const ProductService = require('../../../services/product.service');
+const singleProduct = require('../mocks/singleProduct.json');
+const multipleProducts = require('../mocks/multipleProducts.json');
 
 describe('ProductService', () => {
   describe('#getAll()', () => {
@@ -22,8 +24,6 @@ describe('ProductService', () => {
     });
 
     context('when the database has a single product', () => {
-      const singleProduct = [{ id: 1, name: 'Martelo', quantity: 10 }];
-
       before(() => {
         sinon.stub(ProductModel, 'getAll').resolves(singleProduct);
       });
@@ -39,12 +39,6 @@ describe('ProductService', () => {
     });
 
     context('when the database has multiple products', () => {
-      const multipleProducts = [
-        { id: 1, name: 'Martelo', quantity: 10 },
-        { id: 2, name: 'Prego', quantity: 20 },
-        { id: 3, name: 'Parafuso', quantity: 30 },
-      ];
-
       before(() => {
         sinon.stub(ProductModel, 'getAll').resolves(multipleProducts);
       });
