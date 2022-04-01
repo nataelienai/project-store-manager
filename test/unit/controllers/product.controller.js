@@ -3,9 +3,9 @@ const { expect } = require('chai');
 const sinon = require('sinon');
 const ProductService = require('../../../services/product.service');
 const ProductController = require('../../../controllers/product.controller');
-const singleProduct = require('../mocks/singleProduct.json');
-const multipleProducts = require('../mocks/multipleProducts.json');
-const productNotFoundError = require('../mocks/productNotFoundError.js');
+const productMock = require('../mocks/product.json');
+const productsMock = require('../mocks/products.json');
+const productNotFoundErrorMock = require('../mocks/productNotFoundError.js');
 
 describe('ProductController', () => {
   describe('#getAll()', () => {
@@ -43,7 +43,7 @@ describe('ProductController', () => {
         response.status = sinon.stub().returns(response);
         response.json = sinon.stub().returns();
 
-        sinon.stub(ProductService, 'getAll').resolves({ data: singleProduct });
+        sinon.stub(ProductService, 'getAll').resolves({ data: productMock });
       });
 
       after(() => {
@@ -57,7 +57,7 @@ describe('ProductController', () => {
 
       it('responds with an array that has one product', async () => {
         await ProductController.getAll(request, response);
-        expect(response.json.calledWith(singleProduct)).to.be.true;
+        expect(response.json.calledWith(productMock)).to.be.true;
       });
     });
 
@@ -69,7 +69,7 @@ describe('ProductController', () => {
         response.status = sinon.stub().returns(response);
         response.json = sinon.stub().returns();
 
-        sinon.stub(ProductService, 'getAll').resolves({ data: multipleProducts });
+        sinon.stub(ProductService, 'getAll').resolves({ data: productsMock });
       });
 
       after(() => {
@@ -83,7 +83,7 @@ describe('ProductController', () => {
 
       it('responds with an array that has multiple products', async () => {
         await ProductController.getAll(request, response);
-        expect(response.json.calledWith(multipleProducts)).to.be.true;
+        expect(response.json.calledWith(productsMock)).to.be.true;
       });
     });
   });
@@ -99,7 +99,7 @@ describe('ProductController', () => {
         response.status = sinon.stub().returns(response);
         response.json = sinon.stub().returns();
 
-        sinon.stub(ProductService, 'getById').resolves({ error: productNotFoundError });
+        sinon.stub(ProductService, 'getById').resolves({ error: productNotFoundErrorMock });
       });
 
       after(() => {
@@ -108,12 +108,12 @@ describe('ProductController', () => {
 
       it('calls next() with the error object', async () => {
         await ProductController.getById(request, response, next);
-        expect(next.calledWith(productNotFoundError)).to.be.true;
+        expect(next.calledWith(productNotFoundErrorMock)).to.be.true;
       });
     });
 
     context('when the product is present', () => {
-      const expectedProduct = multipleProducts.find(({ id }) => id === 2);
+      const expectedProduct = productsMock.find(({ id }) => id === 2);
       const request = {};
       const response = {};
 

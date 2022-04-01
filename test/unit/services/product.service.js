@@ -4,8 +4,8 @@ const sinon = require('sinon');
 const ProductModel = require('../../../models/product.model');
 const ProductService = require('../../../services/product.service');
 const errorCodes = require('../../../services/errorCodes');
-const singleProduct = require('../mocks/singleProduct.json');
-const multipleProducts = require('../mocks/multipleProducts.json');
+const productMock = require('../mocks/product.json');
+const productsMock = require('../mocks/products.json');
 
 describe('ProductService', () => {
   describe('#getAll()', () => {
@@ -26,7 +26,7 @@ describe('ProductService', () => {
 
     context('when the database has a single product', () => {
       before(() => {
-        sinon.stub(ProductModel, 'getAll').resolves(singleProduct);
+        sinon.stub(ProductModel, 'getAll').resolves(productMock);
       });
 
       after(() => {
@@ -35,13 +35,13 @@ describe('ProductService', () => {
 
       it('returns an array with one product', async () => {
         const { data: product } = await ProductService.getAll();
-        expect(product).to.deep.equal(singleProduct);
+        expect(product).to.deep.equal(productMock);
       });
     });
 
     context('when the database has multiple products', () => {
       before(() => {
-        sinon.stub(ProductModel, 'getAll').resolves(multipleProducts);
+        sinon.stub(ProductModel, 'getAll').resolves(productsMock);
       });
 
       after(() => {
@@ -50,7 +50,7 @@ describe('ProductService', () => {
 
       it('returns an array with multiple products', async () => {
         const { data: products } = await ProductService.getAll();
-        expect(products).to.deep.equal(multipleProducts);
+        expect(products).to.deep.equal(productsMock);
       });
     });
   });
@@ -77,7 +77,7 @@ describe('ProductService', () => {
     });
 
     context('when the product is present', () => {
-      const expectedProduct = multipleProducts.find(({ id }) => id === 2);
+      const expectedProduct = productsMock.find(({ id }) => id === 2);
 
       before(() => {
         sinon.stub(ProductModel, 'getById').resolves(expectedProduct);
