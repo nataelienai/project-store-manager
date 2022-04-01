@@ -5,7 +5,7 @@ const ProductService = require('../../../services/product.service');
 const ProductController = require('../../../controllers/product.controller');
 const singleProduct = require('../mocks/singleProduct.json');
 const multipleProducts = require('../mocks/multipleProducts.json');
-const productNotFoundError = require('../mocks/productNotFoundError.json');
+const productNotFoundError = require('../mocks/productNotFoundError.js');
 
 describe('ProductController', () => {
   describe('#getAll()', () => {

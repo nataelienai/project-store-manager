@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
 const errorMiddleware = require('../../../middlewares/error');
-const productNotFoundError = require('../mocks/productNotFoundError.json');
+const productNotFoundError = require('../mocks/productNotFoundError.js');
 
 describe('ErrorMiddleware', () => {
   context('when it receives a Not Found error code', () => {
