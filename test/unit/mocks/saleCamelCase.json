@@ -1,0 +1,12 @@
+[
+  {
+    "date": "2022-04-01T17:50:29.000Z",
+    "productId": 1,
+    "quantity": 2
+  },
+  {
+    "date": "2022-04-01T17:50:29.000Z",
+    "productId": 2,
+    "quantity": 3
+  }
+]
