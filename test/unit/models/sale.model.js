@@ -3,7 +3,9 @@ const { expect } = require('chai');
 const sinon = require('sinon');
 const connection = require('../../../models/connection');
 const SaleModel = require('../../../models/sale.model');
+const saleCamelCaseMock = require('../mocks/saleCamelCase.json');
 const salesCamelCaseMock = require('../mocks/salesCamelCase.json');
+const saleSnakeCaseMock = require('../mocks/saleSnakeCase.json');
 const salesSnakeCaseMock = require('../mocks/salesSnakeCase.json');
 
 describe('SaleModel', () => {
@@ -53,6 +55,38 @@ describe('SaleModel', () => {
       it('returns an array with multiple sales', async () => {
         const sales = await SaleModel.getAll();
         expect(sales).to.deep.equal(salesCamelCaseMock);
+      });
+    });
+  });
+
+  describe('#getById()', () => {
+    context('when the sale is not present', () => {
+      before(() => {
+        sinon.stub(connection, 'execute').resolves([[]]);
+      });
+
+      after(() => {
+        connection.execute.restore();
+      });
+
+      it('returns null', async () => {
+        const sale = await SaleModel.getById(1);
+        expect(sale).to.be.null;
+      });
+    });
+
+    context('when the sale is present', () => {
+      before(() => {
+        sinon.stub(connection, 'execute').resolves([saleSnakeCaseMock]);
+      });
+
+      after(() => {
+        connection.execute.restore();
+      });
+
+      it('returns the sale', async () => {
+        const sale = await SaleModel.getById(1);
+        expect(sale).to.deep.equal(saleCamelCaseMock);
       });
     });
   });
