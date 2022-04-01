@@ -1,7 +1,7 @@
 const ProductModel = require('../models/product.model');
 const errorCodes = require('./errorCodes');
 
-const getAll = async () => ProductModel.getAll();
+const getAll = async () => ({ data: await ProductModel.getAll() });
 
 const getById = async (id) => {
   const product = await ProductModel.getById(id);
@@ -11,7 +11,7 @@ const getById = async (id) => {
       error: { code: errorCodes.NOT_FOUND, message: 'Product not found' },
     };
   }
-  return product;
+  return { data: product };
 };
 
 module.exports = {
