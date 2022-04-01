@@ -113,16 +113,15 @@ describe('ProductController', () => {
     });
 
     context('when the product is present', () => {
-      const expectedProduct = productsMock.find(({ id }) => id === 2);
       const request = {};
       const response = {};
 
       before(() => {
-        request.params = { id: 2 };
+        request.params = { id: productMock.id };
         response.status = sinon.stub().returns(response);
         response.json = sinon.stub().returns();
 
-        sinon.stub(ProductService, 'getById').resolves({ data: expectedProduct });
+        sinon.stub(ProductService, 'getById').resolves({ data: productMock });
       });
 
       after(() => {
@@ -136,7 +135,7 @@ describe('ProductController', () => {
 
       it('responds with the product object', async () => {
         await ProductController.getById(request, response);
-        expect(response.json.calledWith(expectedProduct)).to.be.true;
+        expect(response.json.calledWith(productMock)).to.be.true;
       });
     });
   });

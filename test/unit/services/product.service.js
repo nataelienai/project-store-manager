@@ -77,10 +77,8 @@ describe('ProductService', () => {
     });
 
     context('when the product is present', () => {
-      const expectedProduct = productsMock.find(({ id }) => id === 2);
-
       before(() => {
-        sinon.stub(ProductModel, 'getById').resolves(expectedProduct);
+        sinon.stub(ProductModel, 'getById').resolves(productMock);
       });
 
       after(() => {
@@ -88,8 +86,8 @@ describe('ProductService', () => {
       });
 
       it('returns the product', async () => {
-        const { data: actualProduct } = await ProductService.getById(2);
-        expect(actualProduct).to.deep.equal(expectedProduct);
+        const { data: product } = await ProductService.getById(productMock.id);
+        expect(product).to.deep.equal(productMock);
       });
     });
   });
