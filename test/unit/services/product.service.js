@@ -53,4 +53,38 @@ describe('ProductService', () => {
       });
     });
   });
+
+  describe('#getById()', () => {
+    context('when the product is not present', () => {
+      before(() => {
+        sinon.stub(ProductModel, 'getById').resolves(null);
+      });
+
+      after(() => {
+        ProductModel.getById.restore();
+      });
+
+      it('returns an object with the property "error"', async () => {
+        const product = await ProductService.getById(1);
+        expect(product).to.have.property('error');
+      });
+    });
+
+    context('when the product is present', () => {
+      const expectedProduct = multipleProducts.find(({ id }) => id === 2);
+
+      before(() => {
+        sinon.stub(ProductModel, 'getById').resolves(expectedProduct);
+      });
+
+      after(() => {
+        ProductModel.getById.restore();
+      });
+
+      it('returns the product', async () => {
+        const actualProduct = await ProductService.getById(2);
+        expect(actualProduct).to.deep.equal(expectedProduct);
+      });
+    });
+  });
 });
