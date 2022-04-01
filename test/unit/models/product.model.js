@@ -55,9 +55,9 @@ describe('ProductModel', () => {
   });
 
   describe('#getById()', () => {
-    context('when the database is empty', () => {
+    context('when the product is not present', () => {
       before(() => {
-        sinon.stub(connection, 'execute').resolves([[]])
+        sinon.stub(connection, 'execute').resolves([[]]);
       });
 
       after(() => {
@@ -70,7 +70,7 @@ describe('ProductModel', () => {
       });
     });
 
-    context('when the database is populated', () => {
+    context('when the product is present', () => {
       const expectedProduct = multipleProducts.find(({ id }) => id === 2);
 
       before(() => {
