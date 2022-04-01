@@ -11,7 +11,7 @@ app.get('/', (_request, response) => {
   response.send();
 });
 
-app.use(ProductRouter);
+app.use('/products', ProductRouter);
 
 app.use(ErrorMiddleware);
 
