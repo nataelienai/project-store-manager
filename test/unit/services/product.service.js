@@ -26,7 +26,7 @@ describe('ProductService', () => {
 
     context('when the database has a single product', () => {
       before(() => {
-        sinon.stub(ProductModel, 'getAll').resolves(productMock);
+        sinon.stub(ProductModel, 'getAll').resolves([productMock]);
       });
 
       after(() => {
@@ -35,7 +35,7 @@ describe('ProductService', () => {
 
       it('returns an array with one product', async () => {
         const { data: product } = await ProductService.getAll();
-        expect(product).to.deep.equal(productMock);
+        expect(product).to.deep.equal([productMock]);
       });
     });
 

@@ -43,7 +43,7 @@ describe('ProductController', () => {
         response.status = sinon.stub().returns(response);
         response.json = sinon.stub().returns();
 
-        sinon.stub(ProductService, 'getAll').resolves({ data: productMock });
+        sinon.stub(ProductService, 'getAll').resolves({ data: [productMock] });
       });
 
       after(() => {
@@ -57,7 +57,7 @@ describe('ProductController', () => {
 
       it('responds with an array that has one product', async () => {
         await ProductController.getAll(request, response);
-        expect(response.json.calledWith(productMock)).to.be.true;
+        expect(response.json.calledWith([productMock])).to.be.true;
       });
     });
 
