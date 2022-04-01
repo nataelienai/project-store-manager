@@ -17,7 +17,7 @@ describe('ProductController', () => {
         response.status = sinon.stub().returns(response);
         response.json = sinon.stub().returns();
 
-        sinon.stub(ProductService, 'getAll').resolves([]);
+        sinon.stub(ProductService, 'getAll').resolves({ data: [] });
       });
 
       after(() => {
@@ -43,7 +43,7 @@ describe('ProductController', () => {
         response.status = sinon.stub().returns(response);
         response.json = sinon.stub().returns();
 
-        sinon.stub(ProductService, 'getAll').resolves(singleProduct);
+        sinon.stub(ProductService, 'getAll').resolves({ data: singleProduct });
       });
 
       after(() => {
@@ -69,7 +69,7 @@ describe('ProductController', () => {
         response.status = sinon.stub().returns(response);
         response.json = sinon.stub().returns();
 
-        sinon.stub(ProductService, 'getAll').resolves(multipleProducts);
+        sinon.stub(ProductService, 'getAll').resolves({ data: multipleProducts });
       });
 
       after(() => {
@@ -122,7 +122,7 @@ describe('ProductController', () => {
         response.status = sinon.stub().returns(response);
         response.json = sinon.stub().returns();
 
-        sinon.stub(ProductService, 'getById').resolves(expectedProduct);
+        sinon.stub(ProductService, 'getById').resolves({ data: expectedProduct });
       });
 
       after(() => {

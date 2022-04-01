@@ -3,6 +3,7 @@ const { expect } = require('chai');
 const sinon = require('sinon');
 const ProductModel = require('../../../models/product.model');
 const ProductService = require('../../../services/product.service');
+const errorCodes = require('../../../services/errorCodes');
 const singleProduct = require('../mocks/singleProduct.json');
 const multipleProducts = require('../mocks/multipleProducts.json');
 
@@ -18,7 +19,7 @@ describe('ProductService', () => {
       });
 
       it('returns an empty array', async () => {
-        const products = await ProductService.getAll();
+        const { data: products } = await ProductService.getAll();
         expect(products).to.be.an('array').that.is.empty;
       });
     });
@@ -33,8 +34,8 @@ describe('ProductService', () => {
       });
 
       it('returns an array with one product', async () => {
-        const products = await ProductService.getAll();
-        expect(products).to.deep.equal(singleProduct);
+        const { data: product } = await ProductService.getAll();
+        expect(product).to.deep.equal(singleProduct);
       });
     });
 
@@ -48,7 +49,7 @@ describe('ProductService', () => {
       });
 
       it('returns an array with multiple products', async () => {
-        const products = await ProductService.getAll();
+        const { data: products } = await ProductService.getAll();
         expect(products).to.deep.equal(multipleProducts);
       });
     });
@@ -64,9 +65,14 @@ describe('ProductService', () => {
         ProductModel.getById.restore();
       });
 
-      it('returns an object with the property "error"', async () => {
-        const product = await ProductService.getById(1);
-        expect(product).to.have.property('error');
+      it(`returns an error object with the code ${errorCodes.NOT_FOUND}`, async () => {
+        const { error } = await ProductService.getById(1);
+        expect(error).to.have.property('code', errorCodes.NOT_FOUND);
+      });
+
+      it('returns an error object with the message "Product not found"', async () => {
+        const { error } = await ProductService.getById(1);
+        expect(error).to.have.property('message', 'Product not found');
       });
     });
 
@@ -82,7 +88,7 @@ describe('ProductService', () => {
       });
 
       it('returns the product', async () => {
-        const actualProduct = await ProductService.getById(2);
+        const { data: actualProduct } = await ProductService.getById(2);
         expect(actualProduct).to.deep.equal(expectedProduct);
       });
     });
