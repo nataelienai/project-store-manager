@@ -3,6 +3,8 @@ const errorCodes = require('../services/errorCodes');
 module.exports = (err, _req, res, _next) => {
   const statusCodeByError = {
     [errorCodes.NOT_FOUND]: 404,
+    [errorCodes.BAD_REQUEST]: 400,
+    [errorCodes.UNPROCESSABLE_ENTITY]: 422,
   };
 
   const statusCode = statusCodeByError[err.code] || 500;
