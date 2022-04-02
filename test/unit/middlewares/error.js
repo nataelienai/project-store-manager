@@ -50,6 +50,29 @@ describe('ErrorMiddleware', () => {
     });
   });
 
+  context('when it receives a Conflict error code', () => {
+    const request = {};
+    const response = {};
+    const next = () => {};
+
+    before(() => {
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+    });
+
+    it('responds with HTTP status code 409 Conflict', () => {
+      errorMiddleware(errorMocks.productAlreadyExistsError, request, response, next);
+      expect(response.status.calledWith(409)).to.be.true;
+    });
+
+    it('responds with an object containing the error message', () => {
+      errorMiddleware(errorMocks.productAlreadyExistsError, request, response, next);
+
+      const errorMessage = { message: errorMocks.productAlreadyExistsError.message };
+      expect(response.json.calledWith(errorMessage)).to.be.true;
+    });
+  });
+
   context('when it receives a Unprocessable Entity error code', () => {
     const request = {};
     const response = {};

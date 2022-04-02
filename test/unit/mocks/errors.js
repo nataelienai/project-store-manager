@@ -35,6 +35,11 @@ const saleNotFoundError = {
   message: "Sale not found",
 }
 
+const productAlreadyExistsError = {
+  code: errorCodes.CONFLICT,
+  message: "Product already exists",
+}
+
 module.exports = {
   requiredProductNameError,
   requiredProductIdError,
@@ -43,4 +48,5 @@ module.exports = {
   quantityNumberError,
   productNotFoundError,
   saleNotFoundError,
+  productAlreadyExistsError,
 };
