@@ -16,7 +16,17 @@ const getById = async (id) => {
   return products[0];
 };
 
+const getByName = async (name) => {
+  const [products] = await connection.execute(
+    'SELECT * FROM StoreManager.products WHERE name = ?',
+    [name],
+  );
+  if (products.length === 0) return null;
+  return products[0];
+};
+
 module.exports = {
   getAll,
   getById,
+  getByName,
 };
