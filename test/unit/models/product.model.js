@@ -55,7 +55,7 @@ describe('ProductModel', () => {
   });
 
   describe('#getById()', () => {
-    context('when the product is not present', () => {
+    context('when the id does not exist', () => {
       before(() => {
         sinon.stub(connection, 'execute').resolves([[]]);
       });
@@ -70,7 +70,7 @@ describe('ProductModel', () => {
       });
     });
 
-    context('when the product is present', () => {
+    context('when the id exists', () => {
       before(() => {
         sinon.stub(connection, 'execute').resolves([[productMock]]);
       });
@@ -81,6 +81,38 @@ describe('ProductModel', () => {
 
       it('returns the product', async () => {
         const product = await ProductModel.getById(productMock.id);
+        expect(product).to.deep.equal(productMock);
+      });
+    });
+  });
+
+  describe('#getByName()', () => {
+    context('when the name does not exist', () => {
+      before(() => {
+        sinon.stub(connection, 'execute').resolves([[]])
+      });
+
+      after(() => {
+        connection.execute.restore();
+      });
+
+      it('returns null', async () => {
+        const product = await ProductModel.getByName('Produto');
+        expect(product).to.be.null;
+      });
+    });
+
+    context('when the name exists', () => {
+      before(() => {
+        sinon.stub(connection, 'execute').resolves([[productMock]])
+      });
+
+      after(() => {
+        connection.execute.restore();
+      });
+
+      it('returns the product', async () => {
+        const product = await ProductModel.getByName(productMock.name);
         expect(product).to.deep.equal(productMock);
       });
     });
