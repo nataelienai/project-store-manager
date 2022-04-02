@@ -9,7 +9,7 @@ router.get('/', rescue(ProductController.getAll));
 
 router.get('/:id', rescue(ProductController.getById));
 
-router.post('/', productValidationMiddleware);
+router.post('/', productValidationMiddleware, rescue(ProductController.create));
 
 router.put('/:id', productValidationMiddleware);
 
