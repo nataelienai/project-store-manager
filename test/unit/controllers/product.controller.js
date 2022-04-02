@@ -182,9 +182,9 @@ describe('ProductController', () => {
         ProductService.create.restore();
       });
 
-      it('responds with HTTP status code 200 OK', async () => {
+      it('responds with HTTP status code 201 Created', async () => {
         await ProductController.create(request, response);
-        expect(response.status.calledWith(200)).to.be.true;
+        expect(response.status.calledWith(201)).to.be.true;
       });
 
       it('responds with the product object', async () => {
