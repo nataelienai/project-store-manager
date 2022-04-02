@@ -91,4 +91,51 @@ describe('ProductService', () => {
       });
     });
   });
+
+  describe('#create()', () => {
+    context('when the product name already exists', () => {
+      before(() => {
+        sinon.stub(ProductModel, 'getByName').resolves(productMock);
+      });
+
+      after(() => {
+        ProductModel.getByName.restore();
+      });
+
+      it(`returns an error object with the code ${errorCodes.CONFLICT}`, async () => {
+        const { error } = await ProductService.create({
+          name: productMock.name,
+          quantity: productMock.quantity,
+        });
+        expect(error).to.have.property('code', errorCodes.CONFLICT);
+      });
+
+      it('returns an error object with the message "Product already exists"', async () => {
+        const { error } = await ProductService.create({
+          name: productMock.name,
+          quantity: productMock.quantity,
+        });
+        expect(error).to.have.property('message', 'Product already exists');
+      });
+    });
+
+    context('when the product name does not exist', () => {
+      before(() => {
+        sinon.stub(ProductModel, 'getByName').resolves(null);
+        sinon.stub(ProductModel, 'create').resolves(productMock);
+      });
+
+      after(() => {
+        ProductModel.getByName.restore();
+      });
+
+      it('returns the created product', async () => {
+        const { data: product } = await ProductService.create({
+          name: productMock.name,
+          quantity: productMock.quantity,
+        });
+        expect(product).to.deep.equal(productMock);
+      });
+    });
+  });
 });
