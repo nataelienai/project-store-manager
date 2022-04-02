@@ -2,6 +2,7 @@ const { expect } = require('chai');
 const sinon = require('sinon');
 const errorMiddleware = require('../../../middlewares/error');
 const productNotFoundErrorMock = require('../mocks/productNotFoundError.js');
+const errorMocks = require('../mocks/errors');
 
 describe('ErrorMiddleware', () => {
   context('when it receives a Not Found error code', () => {
@@ -23,6 +24,52 @@ describe('ErrorMiddleware', () => {
       errorMiddleware(productNotFoundErrorMock, request, response, next);
 
       const errorMessage = { message: productNotFoundErrorMock.message };
+      expect(response.json.calledWith(errorMessage)).to.be.true;
+    });
+  });
+
+  context('when it receives a Bad Request error code', () => {
+    const request = {};
+    const response = {};
+    const next = () => {};
+
+    before(() => {
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+    });
+
+    it('responds with HTTP status code 400 Bad Request', () => {
+      errorMiddleware(errorMocks.requiredProductNameError, request, response, next);
+      expect(response.status.calledWith(400)).to.be.true;
+    });
+
+    it('responds with an object containing the error message', () => {
+      errorMiddleware(errorMocks.requiredProductNameError, request, response, next);
+
+      const errorMessage = { message: errorMocks.requiredProductNameError.message };
+      expect(response.json.calledWith(errorMessage)).to.be.true;
+    });
+  });
+
+  context('when it receives a Unprocessable Entity error code', () => {
+    const request = {};
+    const response = {};
+    const next = () => {};
+
+    before(() => {
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+    });
+
+    it('responds with HTTP status code 422 Unprocessable Entity', () => {
+      errorMiddleware(errorMocks.productNameLengthError, request, response, next);
+      expect(response.status.calledWith(422)).to.be.true;
+    });
+
+    it('responds with an object containing the error message', () => {
+      errorMiddleware(errorMocks.productNameLengthError, request, response, next);
+
+      const errorMessage = { message: errorMocks.productNameLengthError.message };
       expect(response.json.calledWith(errorMessage)).to.be.true;
     });
   });
