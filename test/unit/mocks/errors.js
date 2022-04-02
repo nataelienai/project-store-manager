@@ -25,10 +25,22 @@ const quantityNumberError = {
   message: '"quantity" must be greater than or equal to 1',
 }
 
+const productNotFoundError = {
+  code: errorCodes.NOT_FOUND,
+  message: "Product not found",
+}
+
+const saleNotFoundError = {
+  code: errorCodes.NOT_FOUND,
+  message: "Sale not found",
+}
+
 module.exports = {
   requiredProductNameError,
   requiredProductIdError,
   requiredQuantityError,
   productNameLengthError,
   quantityNumberError,
+  productNotFoundError,
+  saleNotFoundError,
 };

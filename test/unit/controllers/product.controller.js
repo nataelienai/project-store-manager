@@ -5,7 +5,7 @@ const ProductService = require('../../../services/product.service');
 const ProductController = require('../../../controllers/product.controller');
 const productMock = require('../mocks/product.json');
 const productsMock = require('../mocks/products.json');
-const productNotFoundErrorMock = require('../mocks/productNotFoundError.js');
+const errorsMock = require('../mocks/errors.js');
 
 describe('ProductController', () => {
   describe('#getAll()', () => {
@@ -99,7 +99,7 @@ describe('ProductController', () => {
         response.status = sinon.stub().returns(response);
         response.json = sinon.stub().returns();
 
-        sinon.stub(ProductService, 'getById').resolves({ error: productNotFoundErrorMock });
+        sinon.stub(ProductService, 'getById').resolves({ error: errorsMock.productNotFoundError });
       });
 
       after(() => {
@@ -108,7 +108,7 @@ describe('ProductController', () => {
 
       it('calls next() with the error object', async () => {
         await ProductController.getById(request, response, next);
-        expect(next.calledWith(productNotFoundErrorMock)).to.be.true;
+        expect(next.calledWith(errorsMock.productNotFoundError)).to.be.true;
       });
     });
 

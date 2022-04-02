@@ -5,7 +5,7 @@ const SaleService = require('../../../services/sale.service');
 const SaleController = require('../../../controllers/sale.controller');
 const saleMock = require('../mocks/saleCamelCase.json');
 const salesMock = require('../mocks/salesCamelCase.json');
-const saleNotFoundErrorMock = require('../mocks/saleNotFoundError.js');
+const errorMocks = require('../mocks/errors.js');
 
 describe('SaleController', () => {
   describe('#getAll()', () => {
@@ -100,7 +100,7 @@ describe('SaleController', () => {
         response.status = sinon.stub().returns(response);
         response.json = sinon.stub().returns();
 
-        sinon.stub(SaleService, 'getById').resolves({ error: saleNotFoundErrorMock });
+        sinon.stub(SaleService, 'getById').resolves({ error: errorMocks.saleNotFoundError });
       });
 
       after(() => {
@@ -109,7 +109,7 @@ describe('SaleController', () => {
 
       it('calls next() with the error object', async () => {
         await SaleController.getById(request, response, next);
-        expect(next.calledWith(saleNotFoundErrorMock)).to.be.true;
+        expect(next.calledWith(errorMocks.saleNotFoundError)).to.be.true;
       });
     });
 
