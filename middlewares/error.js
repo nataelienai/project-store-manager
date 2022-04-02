@@ -4,6 +4,7 @@ module.exports = (err, _req, res, _next) => {
   const statusCodeByError = {
     [errorCodes.NOT_FOUND]: 404,
     [errorCodes.BAD_REQUEST]: 400,
+    [errorCodes.CONFLICT]: 409,
     [errorCodes.UNPROCESSABLE_ENTITY]: 422,
   };
 
