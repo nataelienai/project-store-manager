@@ -139,4 +139,58 @@ describe('ProductController', () => {
       });
     });
   });
+
+  describe('#create()', () => {
+    context('when the product already exists', () => {
+      const request = {};
+      const response = {};
+      const next = sinon.stub().returns();
+
+      before(() => {
+        request.body = { name: productMock.name, quantity: productMock.quantity };
+        response.status = sinon.stub().returns(response);
+        response.json = sinon.stub().returns();
+
+        sinon.stub(ProductService, 'create').resolves({
+          error: errorsMock.productAlreadyExistsError
+        });
+      });
+
+      after(() => {
+        ProductService.create.restore();
+      });
+
+      it('calls next() with the error object', async () => {
+        await ProductController.create(request, response, next);
+        expect(next.calledWith(errorsMock.productAlreadyExistsError)).to.be.true;
+      });
+    });
+
+    context('when the product does not exist', () => {
+      const request = {};
+      const response = {};
+
+      before(() => {
+        request.body = { name: productMock.name, quantity: productMock.quantity };
+        response.status = sinon.stub().returns(response);
+        response.json = sinon.stub().returns();
+
+        sinon.stub(ProductService, 'create').resolves({ data: productMock });
+      });
+
+      after(() => {
+        ProductService.create.restore();
+      });
+
+      it('responds with HTTP status code 200 OK', async () => {
+        await ProductController.create(request, response);
+        expect(response.status.calledWith(200)).to.be.true;
+      });
+
+      it('responds with the product object', async () => {
+        await ProductController.create(request, response);
+        expect(response.json.calledWith(productMock)).to.be.true;
+      });
+    });
+  });
 });
