@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const ProductRouter = require('./routers/product.router');
+const SaleRouter = require('./routers/sale.router');
 const ErrorMiddleware = require('./middlewares/error');
 
 const app = express();
@@ -12,6 +13,8 @@ app.get('/', (_request, response) => {
 });
 
 app.use('/products', ProductRouter);
+
+app.use('/sales', SaleRouter);
 
 app.use(ErrorMiddleware);
 
