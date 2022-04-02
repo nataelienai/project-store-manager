@@ -117,4 +117,22 @@ describe('ProductModel', () => {
       });
     });
   });
+
+  describe('#create()', () => {
+    before(() => {
+      sinon.stub(connection, 'execute').resolves([{ insertId: productMock.id }])
+    });
+
+    after(() => {
+      connection.execute.restore();
+    });
+
+    it('returns the created product', async () => {
+      const product = await ProductModel.create({
+        name: productMock.name,
+        quantity: productMock.quantity,
+      });
+      expect(product).to.deep.equal(productMock);
+    });
+  });
 });
