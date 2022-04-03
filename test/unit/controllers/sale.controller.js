@@ -161,7 +161,7 @@ describe('SaleController', () => {
       SaleService.create.restore();
     });
 
-    it('responds with HTTP status code 201 OK', async () => {
+    it('responds with HTTP status code 201 Created', async () => {
       await SaleController.create(request, response);
       expect(response.status.calledWith(201)).to.be.true;
     });
@@ -169,6 +169,38 @@ describe('SaleController', () => {
     it('responds with the created sale', async () => {
       await SaleController.create(request, response);
       expect(response.json.calledWith(createdSaleMock)).to.be.true;
+    });
+  });
+
+  describe('#update()', () => {
+    const request = {};
+    const response = {};
+    const updatedSaleMock = {
+      saleId: 1,
+      itemUpdated: saleMock.map(({ productId, quantity }) => ({ productId, quantity })),
+    };
+
+    before(() => {
+      request.params = { id: updatedSaleMock.saleId };
+      request.body = updatedSaleMock.itemUpdated;
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+
+      sinon.stub(SaleService, 'update').resolves({ data: updatedSaleMock });
+    });
+
+    after(() => {
+      SaleService.update.restore();
+    });
+
+    it('responds with HTTP status code 200 OK', async () => {
+      await SaleController.update(request, response);
+      expect(response.status.calledWith(200)).to.be.true;
+    });
+
+    it('responds with the updated sale', async () => {
+      await SaleController.update(request, response);
+      expect(response.json.calledWith(updatedSaleMock)).to.be.true;
     });
   });
 });
