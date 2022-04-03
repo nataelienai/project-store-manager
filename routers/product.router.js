@@ -11,6 +11,6 @@ router.get('/:id', rescue(ProductController.getById));
 
 router.post('/', productValidationMiddleware, rescue(ProductController.create));
 
-router.put('/:id', productValidationMiddleware);
+router.put('/:id', productValidationMiddleware, rescue(ProductController.update));
 
 module.exports = router;
