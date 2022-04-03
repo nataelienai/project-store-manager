@@ -89,7 +89,7 @@ describe('ProductModel', () => {
   describe('#getByName()', () => {
     context('when the name does not exist', () => {
       before(() => {
-        sinon.stub(connection, 'execute').resolves([[]])
+        sinon.stub(connection, 'execute').resolves([[]]);
       });
 
       after(() => {
@@ -104,7 +104,7 @@ describe('ProductModel', () => {
 
     context('when the name exists', () => {
       before(() => {
-        sinon.stub(connection, 'execute').resolves([[productMock]])
+        sinon.stub(connection, 'execute').resolves([[productMock]]);
       });
 
       after(() => {
@@ -120,7 +120,7 @@ describe('ProductModel', () => {
 
   describe('#create()', () => {
     before(() => {
-      sinon.stub(connection, 'execute').resolves([{ insertId: productMock.id }])
+      sinon.stub(connection, 'execute').resolves([{ insertId: productMock.id }]);
     });
 
     after(() => {
@@ -132,6 +132,21 @@ describe('ProductModel', () => {
         name: productMock.name,
         quantity: productMock.quantity,
       });
+      expect(product).to.deep.equal(productMock);
+    });
+  });
+
+  describe('#update()', () => {
+    before(() => {
+      sinon.stub(connection, 'execute').resolves([[]]);
+    });
+
+    after(() => {
+      connection.execute.restore();
+    });
+
+    it('returns the updated product', async () => {
+      const product = await ProductModel.update(productMock);
       expect(product).to.deep.equal(productMock);
     });
   });
