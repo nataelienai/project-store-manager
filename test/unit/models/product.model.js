@@ -150,4 +150,19 @@ describe('ProductModel', () => {
       expect(product).to.deep.equal(productMock);
     });
   });
+
+  describe('#deleteById()', () => {
+    before(() => {
+      sinon.stub(connection, 'execute').resolves([[]]);
+    });
+
+    after(() => {
+      connection.execute.restore();
+    });
+
+    it('calls connection.execute()', async () => {
+      await ProductModel.deleteById(productMock.id);
+      expect(connection.execute.called).to.be.true;
+    });
+  });
 });
