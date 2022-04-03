@@ -113,4 +113,27 @@ describe('SaleService', () => {
       expect(sale).to.deep.equal(createdSaleMock);
     });
   });
+
+  describe('#update()', () => {
+    const updatedSaleMock = {
+      saleId: 1,
+      itemUpdated: saleMock.map(({ productId, quantity }) => ({ productId, quantity })),
+    };
+
+    before(() => {
+      sinon.stub(SaleModel, 'update').resolves(updatedSaleMock);
+    });
+
+    after(() => {
+      SaleModel.update.restore();
+    });
+
+    it('returns the updated sale', async () => {
+      const { data: sale } = await SaleService.update(
+        updatedSaleMock.saleId,
+        updatedSaleMock.itemUpdated
+      );
+      expect(sale).to.deep.equal(updatedSaleMock);
+    });
+  });
 });
