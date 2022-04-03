@@ -136,4 +136,43 @@ describe('SaleService', () => {
       expect(sale).to.deep.equal(updatedSaleMock);
     });
   });
+
+  describe('#deleteById()', () => {
+    context('when the sale id does not exist', () => {
+      before(() => {
+        sinon.stub(SaleModel, 'getById').resolves(null);
+      });
+
+      after(() => {
+        SaleModel.getById.restore();
+      });
+
+      it(`returns an error object with the code ${errorCodes.NOT_FOUND}`, async () => {
+        const { error } = await SaleService.deleteById(1);
+        expect(error).to.have.property('code', errorCodes.NOT_FOUND);
+      });
+
+      it('returns an error object with the message "Sale not found"', async () => {
+        const { error } = await SaleService.deleteById(1);
+        expect(error).to.have.property('message', 'Sale not found');
+      });
+    });
+
+    context('when the sale id exists', () => {
+      before(() => {
+        sinon.stub(SaleModel, 'getById').resolves(saleMock);
+        sinon.stub(SaleModel, 'deleteById').resolves();
+      });
+
+      after(() => {
+        SaleModel.getById.restore();
+        SaleModel.deleteById.restore();
+      });
+
+      it('returns an empty object', async () => {
+        const response = await SaleService.deleteById(1);
+        expect(response).to.be.empty;
+      });
+    });
+  });
 });
