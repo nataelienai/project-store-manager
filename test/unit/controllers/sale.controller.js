@@ -203,4 +203,56 @@ describe('SaleController', () => {
       expect(response.json.calledWith(updatedSaleMock)).to.be.true;
     });
   });
+
+  describe('#deleteById()', () => {
+    context('when the sale id does not exist', () => {
+      const request = {};
+      const response = {};
+      const next = sinon.stub().returns();
+
+      before(() => {
+        request.params = { id: 1 };
+        response.status = sinon.stub().returns(response);
+        response.end = sinon.stub().returns();
+
+        sinon.stub(SaleService, 'deleteById').resolves({ error: errorMocks.saleNotFoundError });
+      });
+
+      after(() => {
+        SaleService.deleteById.restore();
+      });
+
+      it('calls next() with the error object', async () => {
+        await SaleController.deleteById(request, response, next);
+        expect(next.calledWith(errorMocks.saleNotFoundError)).to.be.true;
+      });
+    });
+
+    context('when the sale id exists', () => {
+      const request = {};
+      const response = {};
+
+      before(() => {
+        request.params = { id: 1 };
+        response.status = sinon.stub().returns(response);
+        response.end = sinon.stub().returns();
+
+        sinon.stub(SaleService, 'deleteById').resolves({});
+      });
+
+      after(() => {
+        SaleService.deleteById.restore();
+      });
+
+      it('responds with HTTP status code 204 No Content', async () => {
+        await SaleController.deleteById(request, response);
+        expect(response.status.calledWith(204)).to.be.true;
+      });
+
+      it('responds with no response body', async () => {
+        await SaleController.deleteById(request, response);
+        expect(response.end.called).to.be.true;
+      });
+    });
+  });
 });
