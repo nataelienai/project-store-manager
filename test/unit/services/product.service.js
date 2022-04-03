@@ -127,6 +127,7 @@ describe('ProductService', () => {
 
       after(() => {
         ProductModel.getByName.restore();
+        ProductModel.create.restore();
       });
 
       it('returns the created product', async () => {
@@ -134,6 +135,47 @@ describe('ProductService', () => {
           name: productMock.name,
           quantity: productMock.quantity,
         });
+        expect(product).to.deep.equal(productMock);
+      });
+    });
+  });
+
+  describe('#update()', () => {
+    context('when the product id does not exist', () => {
+      before(() => {
+        sinon.stub(ProductModel, 'getById').resolves(null);
+      });
+
+      after(() => {
+        ProductModel.getById.restore();
+      });
+
+      it(`returns an error object with the code ${errorCodes.NOT_FOUND}`, async () => {
+        const { error } = await ProductService.update(productMock);
+        expect(error).to.have.property('code', errorCodes.NOT_FOUND);
+      });
+
+      it('returns an error object with the message "Product not found"', async () => {
+        const { error } = await ProductService.update(productMock);
+        expect(error).to.have.property('message', 'Product not found');
+      });
+    });
+
+    context('when the product id exists', () => {
+      const currentProduct = { id: productMock.id, name: 'Produto', quantity: 15 };
+
+      before(() => {
+        sinon.stub(ProductModel, 'getById').resolves(currentProduct);
+        sinon.stub(ProductModel, 'update').resolves(productMock);
+      });
+
+      after(() => {
+        ProductModel.getById.restore();
+        ProductModel.update.restore();
+      });
+
+      it('returns the updated product', async () => {
+        const { data: product } = await ProductService.update(productMock);
         expect(product).to.deep.equal(productMock);
       });
     });
