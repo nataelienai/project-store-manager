@@ -137,4 +137,19 @@ describe('SaleModel', () => {
       expect(sale).to.deep.equal(updatedSaleMock);
     });
   });
+
+  describe('#deleteById()', () => {
+    before(() => {
+      sinon.stub(connection, 'execute').resolves();
+    });
+
+    after(() => {
+      connection.execute.restore();
+    });
+
+    it('calls connection.execute()', async () => {
+      await SaleModel.deleteById(saleCamelCaseMock.id);
+      expect(connection.execute.called).to.be.true;
+    });
+  });
 });
