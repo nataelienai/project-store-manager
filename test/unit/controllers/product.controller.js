@@ -193,4 +193,60 @@ describe('ProductController', () => {
       });
     });
   });
+
+  describe('#update()', () => {
+    context('when the product id does not exist', () => {
+      const request = {};
+      const response = {};
+      const next = sinon.stub().returns();
+
+      before(() => {
+        request.params = { id: productMock.id };
+        request.body = { name: productMock.name, quantity: productMock.quantity };
+        response.status = sinon.stub().returns(response);
+        response.json = sinon.stub().returns();
+
+        sinon.stub(ProductService, 'update').resolves({
+          error: errorsMock.productNotFoundError
+        });
+      });
+
+      after(() => {
+        ProductService.update.restore();
+      });
+
+      it('calls next() with the error object', async () => {
+        await ProductController.update(request, response, next);
+        expect(next.calledWith(errorsMock.productNotFoundError)).to.be.true;
+      });
+    });
+
+    context('when the product exists', () => {
+      const request = {};
+      const response = {};
+
+      before(() => {
+        request.params = { id: productMock.id };
+        request.body = { name: productMock.name, quantity: productMock.quantity };
+        response.status = sinon.stub().returns(response);
+        response.json = sinon.stub().returns();
+
+        sinon.stub(ProductService, 'update').resolves({ data: productMock });
+      });
+
+      after(() => {
+        ProductService.update.restore();
+      });
+
+      it('responds with HTTP status code 200 OK', async () => {
+        await ProductController.update(request, response);
+        expect(response.status.calledWith(200)).to.be.true;
+      });
+
+      it('responds with the product object', async () => {
+        await ProductController.update(request, response);
+        expect(response.json.calledWith(productMock)).to.be.true;
+      });
+    });
+  });
 });
