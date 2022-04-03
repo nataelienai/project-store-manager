@@ -292,7 +292,7 @@ describe('ProductController', () => {
         ProductService.deleteById.restore();
       });
 
-      it('responds with HTTP status code 204 OK', async () => {
+      it('responds with HTTP status code 204 No Content', async () => {
         await ProductController.deleteById(request, response);
         expect(response.status.calledWith(204)).to.be.true;
       });
