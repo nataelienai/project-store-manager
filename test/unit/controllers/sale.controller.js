@@ -140,4 +140,35 @@ describe('SaleController', () => {
       });
     });
   });
+
+  describe('#create()', () => {
+    const request = {};
+    const response = {};
+    const createdSaleMock = {
+      id: 1,
+      itemsSold: saleMock.map(({ productId, quantity }) => ({ productId, quantity })),
+    };
+
+    before(() => {
+      request.body = createdSaleMock.itemsSold;
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+
+      sinon.stub(SaleService, 'create').resolves({ data: createdSaleMock });
+    });
+
+    after(() => {
+      SaleService.create.restore();
+    });
+
+    it('responds with HTTP status code 201 OK', async () => {
+      await SaleController.create(request, response);
+      expect(response.status.calledWith(201)).to.be.true;
+    });
+
+    it('responds with the created sale', async () => {
+      await SaleController.create(request, response);
+      expect(response.json.calledWith(createdSaleMock)).to.be.true;
+    });
+  });
 });
