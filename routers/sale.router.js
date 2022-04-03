@@ -13,4 +13,6 @@ router.post('/', saleValidationMiddleware, rescue(SaleController.create));
 
 router.put('/:id', saleValidationMiddleware, rescue(SaleController.update));
 
+router.delete('/:id', rescue(SaleController.deleteById));
+
 module.exports = router;
