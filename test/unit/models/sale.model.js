@@ -112,4 +112,29 @@ describe('SaleModel', () => {
       expect(sale).to.deep.equal(createdSaleMock);
     });
   });
+
+  describe('#update()', () => {
+    const updatedSaleMock = {
+      saleId: 1,
+      itemUpdated: saleCamelCaseMock.map(({ productId, quantity }) => (
+        { productId, quantity }
+      )),
+    };
+
+    before(() => {
+      sinon.stub(connection, 'execute').resolves();
+    });
+
+    after(() => {
+      connection.execute.restore();
+    });
+
+    it('returns the updated sale', async () => {
+      const sale = await SaleModel.update(
+        updatedSaleMock.saleId,
+        updatedSaleMock.itemUpdated
+      );
+      expect(sale).to.deep.equal(updatedSaleMock);
+    });
+  });
 });
