@@ -180,4 +180,43 @@ describe('ProductService', () => {
       });
     });
   });
+
+  describe('#deleteById()', () => {
+    context('when the product id does not exist', () => {
+      before(() => {
+        sinon.stub(ProductModel, 'getById').resolves(null);
+      });
+
+      after(() => {
+        ProductModel.getById.restore();
+      });
+
+      it(`returns an error object with the code ${errorCodes.NOT_FOUND}`, async () => {
+        const { error } = await ProductService.deleteById(productMock);
+        expect(error).to.have.property('code', errorCodes.NOT_FOUND);
+      });
+
+      it('returns an error object with the message "Product not found"', async () => {
+        const { error } = await ProductService.deleteById(productMock);
+        expect(error).to.have.property('message', 'Product not found');
+      });
+    });
+
+    context('when the product id exists', () => {
+      before(() => {
+        sinon.stub(ProductModel, 'getById').resolves(productMock);
+        sinon.stub(ProductModel, 'deleteById').resolves();
+      });
+
+      after(() => {
+        ProductModel.getById.restore();
+        ProductModel.deleteById.restore();
+      });
+
+      it('returns an empty object', async () => {
+        const response = await ProductService.deleteById(productMock.id);
+        expect(response).to.be.empty;
+      });
+    });
+  });
 });
