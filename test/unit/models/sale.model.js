@@ -90,4 +90,26 @@ describe('SaleModel', () => {
       });
     });
   });
+
+  describe('#create()', () => {
+    const createdSaleMock = {
+      id: 1,
+      itemsSold: saleCamelCaseMock.map(({ productId, quantity }) => (
+        { productId, quantity }
+      )),
+    };
+
+    before(() => {
+      sinon.stub(connection, 'execute').resolves([{ insertId: createdSaleMock.id }]);
+    });
+
+    after(() => {
+      connection.execute.restore();
+    });
+
+    it('returns the created sale', async () => {
+      const sale = await SaleModel.create(createdSaleMock.itemsSold);
+      expect(sale).to.deep.equal(createdSaleMock);
+    });
+  });
 });
