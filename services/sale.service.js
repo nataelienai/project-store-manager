@@ -18,9 +18,22 @@ const create = async (saleProducts) => ({ data: await SaleModel.create(saleProdu
 
 const update = async (id, saleProducts) => ({ data: await SaleModel.update(id, saleProducts) });
 
+const deleteById = async (id) => {
+  const sale = await SaleModel.getById(id);
+
+  if (!sale) {
+    return {
+      error: { code: errorCodes.NOT_FOUND, message: 'Sale not found' },
+    };
+  }
+  await SaleModel.deleteById(id);
+  return {};
+};
+
 module.exports = {
   getAll,
   getById,
   create,
   update,
+  deleteById,
 };
