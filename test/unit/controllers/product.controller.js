@@ -221,7 +221,7 @@ describe('ProductController', () => {
       });
     });
 
-    context('when the product exists', () => {
+    context('when the product id exists', () => {
       const request = {};
       const response = {};
 
@@ -246,6 +246,60 @@ describe('ProductController', () => {
       it('responds with the product object', async () => {
         await ProductController.update(request, response);
         expect(response.json.calledWith(productMock)).to.be.true;
+      });
+    });
+  });
+
+  describe('#deleteById()', () => {
+    context('when the product id does not exist', () => {
+      const request = {};
+      const response = {};
+      const next = sinon.stub().returns();
+
+      before(() => {
+        request.params = { id: productMock.id };
+        response.status = sinon.stub().returns(response);
+        response.end = sinon.stub().returns();
+
+        sinon.stub(ProductService, 'deleteById').resolves({
+          error: errorsMock.productNotFoundError
+        });
+      });
+
+      after(() => {
+        ProductService.deleteById.restore();
+      });
+
+      it('calls next() with the error object', async () => {
+        await ProductController.deleteById(request, response, next);
+        expect(next.calledWith(errorsMock.productNotFoundError)).to.be.true;
+      });
+    });
+
+    context('when the product id exists', () => {
+      const request = {};
+      const response = {};
+
+      before(() => {
+        request.params = { id: productMock.id };
+        response.status = sinon.stub().returns(response);
+        response.end = sinon.stub().returns();
+
+        sinon.stub(ProductService, 'deleteById').resolves({});
+      });
+
+      after(() => {
+        ProductService.deleteById.restore();
+      });
+
+      it('responds with HTTP status code 204 OK', async () => {
+        await ProductController.deleteById(request, response);
+        expect(response.status.calledWith(204)).to.be.true;
+      });
+
+      it('responds with no response body', async () => {
+        await ProductController.deleteById(request, response);
+        expect(response.end.called).to.be.true;
       });
     });
   });
