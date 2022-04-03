@@ -93,4 +93,24 @@ describe('SaleService', () => {
       });
     });
   });
+
+  describe('#create()', () => {
+    const createdSaleMock = {
+      id: 1,
+      itemsSold: saleMock.map(({ productId, quantity }) => ({ productId, quantity })),
+    };
+
+    before(() => {
+      sinon.stub(SaleModel, 'create').resolves(createdSaleMock);
+    });
+
+    after(() => {
+      SaleModel.create.restore();
+    });
+
+    it('returns the created sale', async () => {
+      const { data: sale } = await SaleService.create(createdSaleMock.itemsSold);
+      expect(sale).to.deep.equal(createdSaleMock);
+    });
+  });
 });
