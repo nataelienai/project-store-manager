@@ -48,6 +48,14 @@ const deleteById = async (id) => {
   );
 };
 
+const hasEnoughStock = async ({ productId, quantity }) => {
+  const [[{ quantity: currentQuantity }]] = await connection.execute(
+    'SELECT quantity FROM StoreManager.products WHERE id = ?',
+    [productId],
+  );
+  return currentQuantity >= quantity;
+};
+
 module.exports = {
   getAll,
   getById,
@@ -55,4 +63,5 @@ module.exports = {
   create,
   update,
   deleteById,
+  hasEnoughStock,
 };
