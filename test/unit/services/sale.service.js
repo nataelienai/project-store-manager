@@ -2,6 +2,7 @@ require("dotenv").config();
 const { expect } = require('chai');
 const sinon = require('sinon');
 const SaleModel = require('../../../models/sale.model');
+const ProductModel = require('../../../models/product.model');
 const SaleService = require('../../../services/sale.service');
 const errorCodes = require('../../../services/errorCodes');
 const saleMock = require('../mocks/saleCamelCase.json');
@@ -100,17 +101,41 @@ describe('SaleService', () => {
       itemsSold: saleMock.map(({ productId, quantity }) => ({ productId, quantity })),
     };
 
-    before(() => {
-      sinon.stub(SaleModel, 'create').resolves(createdSaleMock);
+    context('when there is not enough product stock', () => {
+      before(() => {
+        sinon.stub(ProductModel, 'hasEnoughStock').resolves(false);
+      });
+
+      after(() => {
+        ProductModel.hasEnoughStock.restore();
+      });
+
+      it(`returns an error object with the code ${errorCodes.UNPROCESSABLE_ENTITY}`, async () => {
+        const { error } = await SaleService.create(createdSaleMock.itemsSold);
+        expect(error).to.have.property('code', errorCodes.UNPROCESSABLE_ENTITY);
+      });
+
+      it('returns an error object with the message "Such amount is not permitted to sell"', async () => {
+        const { error } = await SaleService.create(createdSaleMock.itemsSold);
+        expect(error).to.have.property('message', 'Such amount is not permitted to sell');
+      });
     });
 
-    after(() => {
-      SaleModel.create.restore();
-    });
+    context('when there is enough product stock', () => {
+      before(() => {
+        sinon.stub(ProductModel, 'hasEnoughStock').resolves(true);
+        sinon.stub(SaleModel, 'create').resolves(createdSaleMock);
+      });
 
-    it('returns the created sale', async () => {
-      const { data: sale } = await SaleService.create(createdSaleMock.itemsSold);
-      expect(sale).to.deep.equal(createdSaleMock);
+      after(() => {
+        ProductModel.hasEnoughStock.restore();
+        SaleModel.create.restore();
+      });
+
+      it('returns the created sale', async () => {
+        const { data: sale } = await SaleService.create(createdSaleMock.itemsSold);
+        expect(sale).to.deep.equal(createdSaleMock);
+      });
     });
   });
 

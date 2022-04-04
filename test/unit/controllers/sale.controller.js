@@ -149,26 +149,47 @@ describe('SaleController', () => {
       itemsSold: saleMock.map(({ productId, quantity }) => ({ productId, quantity })),
     };
 
-    before(() => {
-      request.body = createdSaleMock.itemsSold;
-      response.status = sinon.stub().returns(response);
-      response.json = sinon.stub().returns();
+    context('when there is not enough product stock', () => {
+      const next = sinon.stub().returns();
+      const error = {};
 
-      sinon.stub(SaleService, 'create').resolves({ data: createdSaleMock });
+      before(() => {
+        request.body = createdSaleMock.itemsSold;
+        sinon.stub(SaleService, 'create').resolves({ error });
+      });
+
+      after(() => {
+        SaleService.create.restore();
+      });
+
+      it('calls next() with the error object', async () => {
+        await SaleController.create(request, response, next);
+        expect(next.calledWith(error)).to.be.true;
+      });
     });
 
-    after(() => {
-      SaleService.create.restore();
-    });
+    context('when there is enough product stock', () => {
+      before(() => {
+        request.body = createdSaleMock.itemsSold;
+        response.status = sinon.stub().returns(response);
+        response.json = sinon.stub().returns();
 
-    it('responds with HTTP status code 201 Created', async () => {
-      await SaleController.create(request, response);
-      expect(response.status.calledWith(201)).to.be.true;
-    });
+        sinon.stub(SaleService, 'create').resolves({ data: createdSaleMock });
+      });
 
-    it('responds with the created sale', async () => {
-      await SaleController.create(request, response);
-      expect(response.json.calledWith(createdSaleMock)).to.be.true;
+      after(() => {
+        SaleService.create.restore();
+      });
+
+      it('responds with HTTP status code 201 Created', async () => {
+        await SaleController.create(request, response);
+        expect(response.status.calledWith(201)).to.be.true;
+      });
+
+      it('responds with the created sale', async () => {
+        await SaleController.create(request, response);
+        expect(response.json.calledWith(createdSaleMock)).to.be.true;
+      });
     });
   });
 
