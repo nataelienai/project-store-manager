@@ -7,6 +7,7 @@ const SaleService = require('../../../services/sale.service');
 const errorCodes = require('../../../services/errorCodes');
 const saleMock = require('../mocks/saleCamelCase.json');
 const salesMock = require('../mocks/salesCamelCase.json');
+const productMock = require('../mocks/product.json');
 
 describe('SaleService', () => {
   describe('#getAll()', () => {
@@ -124,11 +125,15 @@ describe('SaleService', () => {
     context('when there is enough product stock', () => {
       before(() => {
         sinon.stub(ProductModel, 'hasEnoughStock').resolves(true);
+        sinon.stub(ProductModel, 'getById').resolves(productMock);
+        sinon.stub(ProductModel, 'update').resolves();
         sinon.stub(SaleModel, 'create').resolves(createdSaleMock);
       });
 
       after(() => {
         ProductModel.hasEnoughStock.restore();
+        ProductModel.getById.restore();
+        ProductModel.update.restore();
         SaleModel.create.restore();
       });
 
@@ -186,11 +191,15 @@ describe('SaleService', () => {
     context('when the sale id exists', () => {
       before(() => {
         sinon.stub(SaleModel, 'getById').resolves(saleMock);
+        sinon.stub(ProductModel, 'getById').resolves(productMock);
+        sinon.stub(ProductModel, 'update').resolves();
         sinon.stub(SaleModel, 'deleteById').resolves();
       });
 
       after(() => {
         SaleModel.getById.restore();
+        ProductModel.getById.restore();
+        ProductModel.update.restore();
         SaleModel.deleteById.restore();
       });
 
