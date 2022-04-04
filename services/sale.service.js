@@ -1,4 +1,5 @@
 const SaleModel = require('../models/sale.model');
+const ProductModel = require('../models/product.model');
 const errorCodes = require('./errorCodes');
 
 const getAll = async () => ({ data: await SaleModel.getAll() });
@@ -14,7 +15,27 @@ const getById = async (id) => {
   return { data: sale };
 };
 
-const create = async (saleProducts) => ({ data: await SaleModel.create(saleProducts) });
+const validateQuantities = async (products) => {
+  const productsHaveStock = await Promise.all(
+    products.map(ProductModel.hasEnoughStock),
+  );
+  return productsHaveStock.every((productHasStock) => productHasStock);
+};
+
+const create = async (saleProducts) => {
+  const productsHaveStock = await validateQuantities(saleProducts);
+
+  if (!productsHaveStock) {
+    return {
+      error: {
+        code: errorCodes.UNPROCESSABLE_ENTITY,
+        message: 'Such amount is not permitted to sell',
+      },
+    };
+  }
+
+  return { data: await SaleModel.create(saleProducts) };
+};
 
 const update = async (id, saleProducts) => ({ data: await SaleModel.update(id, saleProducts) });
 

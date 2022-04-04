@@ -15,8 +15,11 @@ const getById = async (req, res, next) => {
   res.status(200).json(data);
 };
 
-const create = async (req, res) => {
-  const { data } = await SaleService.create(req.body);
+const create = async (req, res, next) => {
+  const { data, error } = await SaleService.create(req.body);
+
+  if (error) return next(error);
+
   res.status(201).json(data);
 };
 
