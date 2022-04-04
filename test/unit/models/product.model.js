@@ -165,4 +165,40 @@ describe('ProductModel', () => {
       expect(connection.execute.called).to.be.true;
     });
   });
+
+  describe('#hasEnoughStock()', () => {
+    context('when the quantity of the product is not sufficient', () => {
+      before(() => {
+        sinon.stub(connection, 'execute').resolves(
+          [[{ quantity: productMock.quantity - 1 }]]
+        );
+      });
+
+      after(() => {
+        connection.execute.restore();
+      });
+
+      it('returns false', async () => {
+        const hasEnoughStock = await ProductModel.hasEnoughStock(productMock);
+        expect(hasEnoughStock).to.be.false;
+      });
+    });
+
+    context('when the quantity of the product is sufficient', () => {
+      before(() => {
+        sinon.stub(connection, 'execute').resolves(
+          [[{ quantity: productMock.quantity }]]
+        );
+      });
+
+      after(() => {
+        connection.execute.restore();
+      });
+
+      it('returns true', async () => {
+        const hasEnoughStock = await ProductModel.hasEnoughStock(productMock);
+        expect(hasEnoughStock).to.be.true;
+      });
+    });
+  });
 });
