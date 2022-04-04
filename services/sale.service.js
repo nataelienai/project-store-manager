@@ -22,6 +22,16 @@ const validateQuantities = async (products) => {
   return productsHaveStock.every((productHasStock) => productHasStock);
 };
 
+const updateQuantities = async (products, operateFn) => {
+  await Promise.all(
+    products.map(async (product) => {
+      const { id, name, quantity } = await ProductModel.getById(product.productId);
+
+      await ProductModel.update({ id, name, quantity: operateFn(quantity, product.quantity) });
+    }),
+  );
+};
+
 const create = async (saleProducts) => {
   const productsHaveStock = await validateQuantities(saleProducts);
 
@@ -34,19 +44,26 @@ const create = async (saleProducts) => {
     };
   }
 
+  await updateQuantities(saleProducts, (totalQuantity, saleQuantity) => (
+    totalQuantity - saleQuantity
+  ));
   return { data: await SaleModel.create(saleProducts) };
 };
 
 const update = async (id, saleProducts) => ({ data: await SaleModel.update(id, saleProducts) });
 
 const deleteById = async (id) => {
-  const sale = await SaleModel.getById(id);
+  const saleProducts = await SaleModel.getById(id);
 
-  if (!sale) {
+  if (!saleProducts) {
     return {
       error: { code: errorCodes.NOT_FOUND, message: 'Sale not found' },
     };
   }
+
+  await updateQuantities(saleProducts, (totalQuantity, saleQuantity) => (
+    totalQuantity + saleQuantity
+  ));
   await SaleModel.deleteById(id);
   return {};
 };
