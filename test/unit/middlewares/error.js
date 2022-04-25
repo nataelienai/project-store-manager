@@ -1,6 +1,6 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
-const errorMiddleware = require('../../../middlewares/error');
+const errorMiddleware = require('../../../src/middlewares/error');
 const errorMocks = require('../mocks/errors');
 
 describe('ErrorMiddleware', () => {

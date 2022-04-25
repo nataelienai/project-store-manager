@@ -1,10 +1,10 @@
 require("dotenv").config();
 const { expect } = require('chai');
 const sinon = require('sinon');
-const SaleModel = require('../../../models/sale.model');
-const ProductModel = require('../../../models/product.model');
-const SaleService = require('../../../services/sale.service');
-const errorCodes = require('../../../services/errorCodes');
+const SaleModel = require('../../../src/models/sale.model');
+const ProductModel = require('../../../src/models/product.model');
+const SaleService = require('../../../src/services/sale.service');
+const errorCodes = require('../../../src/services/errorCodes');
 const saleMock = require('../mocks/saleCamelCase.json');
 const salesMock = require('../mocks/salesCamelCase.json');
 const productMock = require('../mocks/product.json');

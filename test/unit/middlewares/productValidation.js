@@ -1,6 +1,6 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
-const productValidationMiddleware = require('../../../middlewares/productValidation');
+const productValidationMiddleware = require('../../../src/middlewares/productValidation');
 const errorMocks = require('../mocks/errors');
 
 describe('productValidation middleware', () => {

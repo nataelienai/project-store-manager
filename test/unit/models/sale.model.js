@@ -1,8 +1,8 @@
 require("dotenv").config();
 const { expect } = require('chai');
 const sinon = require('sinon');
-const connection = require('../../../models/connection');
-const SaleModel = require('../../../models/sale.model');
+const connection = require('../../../src/models/connection');
+const SaleModel = require('../../../src/models/sale.model');
 const saleCamelCaseMock = require('../mocks/saleCamelCase.json');
 const salesCamelCaseMock = require('../mocks/salesCamelCase.json');
 const saleSnakeCaseMock = require('../mocks/saleSnakeCase.json');

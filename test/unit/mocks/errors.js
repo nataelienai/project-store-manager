@@ -1,4 +1,4 @@
-const errorCodes = require('../../../services/errorCodes');
+const errorCodes = require('../../../src/services/errorCodes');
 
 const requiredProductNameError = {
   code: errorCodes.BAD_REQUEST,

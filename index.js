@@ -1,8 +1,8 @@
 require('dotenv').config();
 const express = require('express');
-const ProductRouter = require('./routers/product.router');
-const SaleRouter = require('./routers/sale.router');
-const ErrorMiddleware = require('./middlewares/error');
+const ProductRouter = require('./src/routers/product.router');
+const SaleRouter = require('./src/routers/sale.router');
+const ErrorMiddleware = require('./src/middlewares/error');
 
 const app = express();
 app.use(express.json());
