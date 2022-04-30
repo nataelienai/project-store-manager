@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  database:
+    image: mysql:5.7
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./StoreManager.sql:/docker-entrypoint-initdb.d/StoreManager.sql
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=1234
+  app:
+    depends_on:
+      - database
+    build:
+      context: .
+      args:
+        - NODE_ENV=development
+    command: ../node_modules/.bin/nodemon --inspect=0.0.0.0:9229 index.js
+    volumes:
+      - .:/opt/node_app/app
+      - ./package.json:/opt/node_app/package.json
+      - ./package-lock.json:/opt/node_app/package-lock.json
+      - not_used:/opt/node_app/app/node_modules
+    ports:
+      - 3000:3000
+      - 9229:9229
+      - 9230:9230
+    environment:
+      - NODE_ENV=development
+      - MYSQL_HOST=database
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=1234
+volumes:
+  db_data: {}
+  not_used: {}
