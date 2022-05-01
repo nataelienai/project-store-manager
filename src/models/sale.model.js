@@ -64,7 +64,7 @@ const update = async (saleId, saleProducts) => {
   );
 
   await Promise.all(saleProducts.map(updateSaleProduct));
-  return { saleId, itemUpdated: saleProducts };
+  return { saleId: parseInt(saleId), itemUpdated: saleProducts };
 };
 
 const deleteById = async (id) => {
