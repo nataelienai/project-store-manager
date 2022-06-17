@@ -21,7 +21,7 @@ Com o repositório clonado e dentro de um terminal:
 1. Entre na pasta do repositório:
 
 ```
-cd project-store-manager
+cd store-manager
 ```
 
 2. Execute a aplicação com o Docker Compose:
